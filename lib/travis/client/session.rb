@@ -13,6 +13,12 @@ end
 
 require 'json'
 
+class Hash
+  def to_struct(struct_name)
+    Struct.new(struct_name,*keys).new(*values)
+  end
+end
+
 module Travis
   module Client
     class Session
@@ -136,6 +142,9 @@ module Travis
 
       def load(data)
         result = {}
+        if data.is_a?(String)
+          return { log: { attributes: { body: data }}.to_struct('DummyEntity')}.to_struct('DummyLog')
+        end
         (data || {}).each_pair do |key, value|
           entity      = load_entity(key, value)
           result[key] = entity if entity
