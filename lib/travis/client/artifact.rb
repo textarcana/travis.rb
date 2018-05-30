@@ -48,7 +48,7 @@ module Travis
 
       def body(stream = block_given?)
         return current_body unless block_given? or stream
-        return yield(current_body) unless stream and job.pending?
+        return yield(current_body) #unless stream and job.pending?
         number = 0
 
         session.listen(self) do |listener|
